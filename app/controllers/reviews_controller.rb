@@ -9,11 +9,14 @@ class ReviewsController < ApplicationController
   def create
     self.review = Review.new(review_params)
 
+    review.user_id = current_user.id
+    review.product_id = product.id
+
     if review.save
       product.reviews << review
       redirect_to category_product_url(product.category, product), notice: 'Review was successfully created.'
     else
-      render action: 'new'
+      redirect_to category_product_url(product.category, product), notice: 'There was a problem creating new review.'
     end
   end
 
